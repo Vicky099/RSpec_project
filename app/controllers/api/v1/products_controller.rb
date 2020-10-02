@@ -28,14 +28,16 @@ class Api::V1::ProductsController < Api::V1::BaseController
 	end
 
 	def destroy
-		@product.destroy
+		if @product.destroy
+			render json: {status: "success", code: 200, message: ['Product deleted successfully'], data: [] }, status: :ok
+		end
 	end
 
 	private
 	def find_product
 		@product = Product.find_by_id(params[:id])
 		unless @product.present?
-			render json: {status: 'error', code: 422, message: 'Product not found', data: []}, status: :unprocessable_entity and return
+			render json: {status: 'error', code: 404, message: ['Product not found'], data: []}, status: :unprocessable_entity and return
 		end
 	end
 
